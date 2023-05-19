@@ -1,7 +1,19 @@
 // This script is injected into the CourseWorks grades page and is responsible for pulling the grades from the page.
 
+//==================================================================================================
+// UTILITY FUNCTIONS (Same scope to avoid using the messaging API for them)
+//==================================================================================================
+function getGradeColor(userGrade, maxGrade, averageGrade) {
+    
+
+}
+
+//==================================================================================================
+// MAIN CODE
+//==================================================================================================
+
 // retrieve the table from the page with the ID "grades_summary"
-window.addEventListener("load", (event) => {
+window.addEventListener("load", () => {
 
     // check if the URL contains "grades" and "courseworks2"
     var url = window.location.href;
@@ -11,17 +23,12 @@ window.addEventListener("load", (event) => {
         return;
     }
 
-
+    // retrieve table, drill down to the body, and then the rows
     var table = document.getElementById("grades_summary");
-
-
-    // retrieve the table body from the table
     var tableBody = table.getElementsByTagName("tbody")[0];
-
-    // retrieve the rows from the table body
     var rows = tableBody.getElementsByTagName("tr");
 
-    // each row represents an assignment, create a dictionary to store the assignment name and grade
+    //format {"assignmentName": "grade"}
     var grades = {};
 
     // iterate through each row
@@ -57,5 +64,6 @@ window.addEventListener("load", (event) => {
     // insert the div after the div with the ID "GradeSummarySelectMenuGroup"
     var parent = document.getElementById("GradeSummarySelectMenuGroup").parentNode;
     parent.insertBefore(div, parent.childNodes[3]);
-    
+    // display the image at https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg as a test
+    div.innerHTML += "<img src='https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg' alt='cat' width='200' height='200'>";
 });
