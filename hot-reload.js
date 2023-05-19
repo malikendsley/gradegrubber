@@ -1,12 +1,3 @@
-chrome.runtime.onInstalled.addListener(() => {
-    // Code to run when the extension is installed
-    //TODO: initialize default settings on install (but not on update)
-    
-
-});
-
-//TODO: Remove this in Prod
-
 const filesInDirectory = dir => new Promise (resolve =>
     dir.createReader ().readEntries (entries =>
         Promise.all (entries.filter (e => e.name[0] !== '.').map (e =>

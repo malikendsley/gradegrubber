@@ -1,22 +1,18 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "Grade Grubber",
     "description": "Simple CourseWorks Analytics",
     "version": "1.0",
     "background": {
-        "service_worker": "background.js"
+        "scripts": ["background.js"]
     },
     "content_scripts": [
         {
-            "matches": [
-                "<all_urls>"
-            ],
-            "js": [
-                "injection.js"
-            ]
+            "matches": ["<all_urls>"],
+            "js": ["injection.js"]
         }
     ],
-    "action": {
+    "browser_action": {
         "default_icon": "test_image.png",
         "default_popup": "popup.html"
     },
