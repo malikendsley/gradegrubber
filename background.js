@@ -14,11 +14,11 @@ chrome.runtime.onInstalled.addListener(function (details) {
         // Fresh installation
         console.log('Extension installed');
         chrome.storage.sync.set(settings, function () {
-            console.log("Settings loaded");
+            //console.log("Settings loaded");
         });
     } else if (details.reason === 'update') {
         // Extension update
-        console.log('Extension updated');
+        //console.log('Extension updated');
 
     }
 });

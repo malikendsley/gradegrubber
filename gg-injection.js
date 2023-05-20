@@ -43,7 +43,7 @@ window.addEventListener("load", () => {
                 // error case(s)
                 if (curMode == "statistics" && rowType == "statistics") {
                     // error
-                    console.log("Error: two statistics rows in a row, this may indicate a courseworks update");
+                    // console.log("Error: two statistics rows in a row, this may indicate a courseworks update");
                     return;
                 }
 

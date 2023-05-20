@@ -43,28 +43,28 @@ sensitivitySlider.addEventListener('input', () => {
     const sensitivityValue = sensitivitySlider.value;
     sensitivityOutput.textContent = sensitivityValue;
     chrome.storage.sync.set({ SENSITIVITY: sensitivityValue }, function () {
-        console.log("Sensitivity changed to " + sensitivityValue);
+        //console.log("Sensitivity changed to " + sensitivityValue);
     });
 });
 
 goodColorPicker.addEventListener('input', () => {
     const goodColorValue = goodColorPicker.value;
     chrome.storage.sync.set({ GOOD_COLOR: goodColorValue }, function () {
-        console.log("Good color changed to " + goodColorValue);
+        //console.log("Good color changed to " + goodColorValue);
     });
 });
 
 neutralColorPicker.addEventListener('input', () => {
     const neutralColorValue = neutralColorPicker.value;
     chrome.storage.sync.set({ NEUTRAL_COLOR: neutralColorValue }, function () {
-        console.log("Neutral color changed to " + neutralColorValue);
+        //console.log("Neutral color changed to " + neutralColorValue);
     });
 });
 
 badColorPicker.addEventListener('input', () => {
     const badColorValue = badColorPicker.value;
     chrome.storage.sync.set({ BAD_COLOR: badColorValue }, function () {
-        console.log("Bad color changed to " + badColorValue);
+        //console.log("Bad color changed to " + badColorValue);
     });
 });
 
@@ -108,6 +108,6 @@ document.getElementById('reset-settings-button').addEventListener('click', funct
 document.getElementById('enable-switch').addEventListener('change', function () {
     let isChecked = this.checked;
     chrome.storage.sync.set({ EXTENSION_ENABLED: isChecked }, function () {
-        console.log("Extension " + (isChecked ? "enabled" : "disabled"));
+        //console.log("Extension " + (isChecked ? "enabled" : "disabled"));
     });
 });
