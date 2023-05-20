@@ -3,27 +3,61 @@
 //==================================================================================================
 // UTILITY FUNCTIONS (Same scope to avoid using the messaging API for them)
 //==================================================================================================
-function getBlendedColor(relativePerformance, badColor, goodColor, neutral) {
+String.prototype.convertToRGB = function () {
+    //strip the leading # if it's there
+    console.log(this);
+    if (this.length != 6) {
+        throw "Only six-digit hex colors are allowed.";
+    }
+
+    var aRgbHex = this.match(/.{1,2}/g);
+    var aRgb = [
+        parseInt(aRgbHex[0], 16),
+        parseInt(aRgbHex[1], 16),
+        parseInt(aRgbHex[2], 16)
+    ];
+    return aRgb;
+}
+
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+  }
+
+function getBlendedColor(relPerf, BC, GC, NC, sens) {
+    //strip the leading # if it's there
+    BC = BC.replace('#', '');
+    GC = GC.replace('#', '');
+    NC = NC.replace('#', '');
+    BCrgb = BC.convertToRGB(); // however these are lists, not objects
+    GCrgb = GC.convertToRGB();
+    NCrgb = NC.convertToRGB();
+
+    // convert to objects
+    BC = { r: BCrgb[0], g: BCrgb[1], b: BCrgb[2] };
+    GC = { r: GCrgb[0], g: GCrgb[1], b: GCrgb[2] };
+    NC = { r: NCrgb[0], g: NCrgb[1], b: NCrgb[2] };
 
     let blendedColor;
-
-    if (relativePerformance < 0) {
+    if (relPerf < 0) {
         // Interpolate between badColor and white
         blendedColor = {
-            r: Math.round((1 + relativePerformance) * badColor.r + (-relativePerformance) * neutral.r),
-            g: Math.round((1 + relativePerformance) * badColor.g + (-relativePerformance) * neutral.g),
-            b: Math.round((1 + relativePerformance) * badColor.b + (-relativePerformance) * neutral.b)
+            r: Math.round((1 + relPerf * sens) * NC.r + (-relPerf * sens) * BC.r),
+            g: Math.round((1 + relPerf * sens) * NC.g + (-relPerf * sens) * BC.g),
+            b: Math.round((1 + relPerf * sens) * NC.b + (-relPerf * sens) * BC.b),
         };
     } else {
         // Interpolate between white and goodColor
         blendedColor = {
-            r: Math.round((1 - relativePerformance) * neutral.r + relativePerformance * goodColor.r),
-            g: Math.round((1 - relativePerformance) * neutral.g + relativePerformance * goodColor.g),
-            b: Math.round((1 - relativePerformance) * neutral.b + relativePerformance * goodColor.b)
+            r: Math.round((1 - relPerf * sens) * NC.r + relPerf * sens * GC.r),
+            g: Math.round((1 - relPerf * sens) * NC.g + relPerf * sens * GC.g),
+            b: Math.round((1 - relPerf * sens) * NC.b + relPerf * sens * GC.b),
         };
     }
 
-    return blendedColor;
+    //convert the color to a 6 digit hex string
+    let color = "#" + componentToHex(blendedColor.r) + componentToHex(blendedColor.g) + componentToHex(blendedColor.b);
+    return color;
 }
 
 function getRelativePerformance(userGrade, maxGrade, averageGrade) {
@@ -33,21 +67,22 @@ function getRelativePerformance(userGrade, maxGrade, averageGrade) {
     // the worst score is achieved when the user has 0 and the average is maxGrade
     // the best score is achieved when the user has maxGrade and the average is 0
     // this is extracted to a function in case we want to change the formula later
-    return (userGrade - averageGrade) / (maxGrade - averageGrade);
+    console.log("userGrade: " + userGrade + " maxGrade: " + maxGrade + " averageGrade: " + averageGrade)
+    return (userGrade - averageGrade) / maxGrade;
 }
 
 //==================================================================================================
 // MAIN CODE
 //==================================================================================================
 
-// retrieve the table from the page with the ID "grades_summary"
+
 window.addEventListener("load", () => {
 
     // dump the contents of chrome's storage (it only contains the settings)
-    chrome.storage.sync.get(null, function (result) {
-        console.log(result);
+    chrome.storage.sync.get(null, function (retrievedSettings) {
+        console.log(retrievedSettings);
 
-        if (!result.EXTENSION_ENABLED) {
+        if (!retrievedSettings.EXTENSION_ENABLED) {
             console.log("Extension disabled");
             return;
         } else {
@@ -64,44 +99,112 @@ window.addEventListener("load", () => {
             var tableBody = table.getElementsByTagName("tbody")[0];
             var rows = tableBody.getElementsByTagName("tr");
 
-            //format {"assignmentName": "grade"}
+            //format {"assignmentName": {"grade": float, "maxGrade": float, "averageGrade": float, "type": "whatever the type is"}}
             var grades = {};
 
             // iterate through each row
+            // each assignment if graded has a following row with the mean
+            // find each assignment, then try to find the row containing the mean
+            // if another assignment is found, then the stats row is skipped
+            let curMode = "skip";
+            let assignmentCount = 0;
+            let curAssignment = "";
+            let curAssignmentRow;
+            //console.log("Rows: " + rows.length)
             for (let i = 0; i < rows.length; i++) {
-                // only pull the rows containing the class "student_assignment"
+                // figure out what kind of row we're looking at
+                let rowType = "skip";
                 if (rows[i].classList.contains("student_assignment") && rows[i].classList.contains("assignment_graded")) {
-                    //print "reading row" followed by the row to string
-                    // the assignment name is in a div inside the th tag
-                    let assignmentName = rows[i].getElementsByTagName("th")[0].getElementsByTagName("a")[0].innerHTML;
-                    //console.log("assignment name: " + assignmentName);
-                    // retrieve the score and the max score from the row
-                    let score = rows[i].getElementsByTagName("td")[2].querySelector(".grade").lastChild.textContent.trim();
-                    console.log("score: " + score);
-                    // this is the selector path: td.assignment_score > div > span > span:nth-child(2)
-                    let outOf = rows[i].getElementsByTagName("td")[2].querySelector(".tooltip > span:last-child").textContent;
-                    console.log("out of: " + outOf);
-                    // filter for just numbers
-                    outOf = outOf.replace(/[^0-9.]/g, "");
-                    // combine the score and outof into a string of the format "score / outOf"
-                    let grade = score + " / " + outOf;
-                    // add the assignment name and grade to the dictionary
-                    grades[assignmentName.toString()] = grade;
+                    rowType = "assignment";
+                    assignmentCount++;
+                } else if (rows[i].classList.contains("comments") && rows[i].classList.contains("grade_details") && rows[i].classList.contains("assignment_graded")) {
+                    // some graded assignments don't have statistics, their details rows have no children
+                    if (!rows[i].children.length == 0) {
+                        rowType = "statistics";
+                    }
                 }
-            }
+                if (rowType != "skip") {
+                    console.log("Row " + i + ": " + rowType + (rowType == "assignment" ? " (" + assignmentCount + ")" : ""));
+                }
 
-            // display this as plaintext immediately after the div with the ID "GradeSummarySelectMenuGroup"
-            // create a div to store the grades
-            var div = document.createElement("div");
-            div.id = "gradegrubber-result";
-            div.style = "padding: 10px; margin: 10px; border: 1px solid black; border-radius: 5px; background-color: #f2f2f2;";
-            // put the result in plaintext in the div
-            div.innerHTML = JSON.stringify(grades);
-            // insert the div after the div with the ID "GradeSummarySelectMenuGroup"
-            var parent = document.getElementById("GradeSummarySelectMenuGroup").parentNode;
-            parent.insertBefore(div, parent.childNodes[3]);
-            // display the image at https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg as a test
-            div.innerHTML += "<img src='https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg' alt='cat' width='200' height='200'>";
+                // error case(s)
+                if (curMode == "statistics" && rowType == "statistics") {
+                    // error
+                    console.log("Error: two statistics rows in a row, this may indicate a courseworks update");
+                    return;
+                }
+
+                // normal case(s)
+                if (rowType == "assignment") {
+                    // retrieve data
+                    let assignmentName = rows[i].getElementsByTagName("th")[0].getElementsByTagName("a")[0].innerHTML;
+                    //console.log("Assignment: " + assignmentName);
+                    let assignmentType = rows[i].getElementsByTagName("th")[0].getElementsByTagName("div")[0].innerHTML;
+                    let score = rows[i].querySelector(".grade").lastChild.textContent.trim();
+                    //if the score contains a % sign, then its a special form of grade, so don't check the maxScore (we know its 100)
+                    let maxScore;
+                    if (score.includes("%")) {
+                        // special case for percentage grades
+                        //console.log("Percentage grade detected");
+                        score = score.replace(/[^0-9.]/g, "");
+                        score = parseFloat(score);
+                        maxScore = 100;
+                    } else {
+                        // normal score retrieval
+                        let spans = Array.from(rows[i].querySelector(".tooltip").getElementsByTagName("span"));
+                        //console.log("debug" + spans.innerHTML);
+                        maxScore = spans.filter(span => span.classList.length === 0)[0].textContent.replace(/[^0-9.]/g, "");
+                    }
+                    // create a new assignment object, null the averageGrade in case there is no statistics row
+                    grades[assignmentName] = { "grade": score, "maxGrade": maxScore, "averageGrade": null, "type": assignmentType };
+                    curAssignment = assignmentName;
+                    //console.log(assignmentName + ": " + score + " / " + maxScore);
+                    curAssignmentRow = rows[i];
+                } else if (rowType == "statistics") {
+                    // retrieve the average score from the row
+                    meanMedian = rows[i].querySelector("tbody").querySelector("td").innerHTML;
+                    //split by whitespace
+                    pieces = meanMedian.split(/\s+/);
+                    //get the element after the "Mean:" string
+                    meanValue = pieces[pieces.indexOf("Mean:") + 1].trim();
+                    // update the last assignment object, the key is curAssignment
+                    grades[curAssignment]["averageGrade"] = meanValue;
+
+                    // once you have the stats for the row, you can shade it
+                    // get the relative performance of the user
+                    let relativePerformance = getRelativePerformance(grades[curAssignment]["grade"], grades[curAssignment]["maxGrade"], grades[curAssignment]["averageGrade"]);
+                    console.log("Relative performance for " + curAssignment + ": " + relativePerformance);
+                    // find the olor to shade the row
+                    GC = retrievedSettings.GOOD_COLOR;
+                    BC = retrievedSettings.BAD_COLOR;
+                    NC = retrievedSettings.NEUTRAL_COLOR;
+                    sens = retrievedSettings.SENSITIVITY;
+                    console.log("Colors (G, B, N): " + GC + ", " + BC + ", " + NC + ", sens: " + sens);
+                    let color = getBlendedColor(relativePerformance, BC, GC, NC, sens);
+                    console.log("Setting color to " + color + " for " + curAssignment);
+                    rows[i].style.backgroundColor = color; 
+                    if(curAssignmentRow){
+                        curAssignmentRow.style.backgroundColor = color;
+                    }
+                } else {
+                    // skip row
+                }
+                curMode = rowType;
+            }
         }
+
+        // display this as plaintext immediately after the div with the ID "GradeSummarySelectMenuGroup"
+        // create a div to store the grades
+        var div = document.createElement("div");
+        div.id = "gradegrubber-result";
+        div.style = "padding: 10px; margin: 10px; border: 1px solid black; border-radius: 5px; background-color: #f2f2f2;";
+        // put the result in plaintext in the div
+        console.log(grades);
+        div.innerHTML = JSON.stringify(grades);
+        // insert the div after the div with the ID "GradeSummarySelectMenuGroup"
+        var parent = document.getElementById("GradeSummarySelectMenuGroup").parentNode;
+        parent.insertBefore(div, parent.childNodes[3]);
+        // display the image at https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg as a test
+        div.innerHTML += "<img src='https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg' alt='cat' width='200' height='200'>";
     });
 });

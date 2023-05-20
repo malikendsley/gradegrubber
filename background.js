@@ -1,8 +1,8 @@
 settings = {
     EXTENSION_ENABLED: true,
-    GOOD_COLOR: "#00FF00",
-    BAD_COLOR: "#FF0000",
-    NEUTRAL_COLOR: "#FFFF00",
+    GOOD_COLOR: "#00ff00",
+    BAD_COLOR: "#ff0000",
+    NEUTRAL_COLOR: "#ffff00",
     SENSITIVITY: 1.0,
     SETTINGS_RESET: false,
 }
