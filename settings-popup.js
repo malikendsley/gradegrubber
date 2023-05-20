@@ -3,7 +3,7 @@ resetSettings = {
     EXTENSION_ENABLED: true,
     GOOD_COLOR: "#00ff00",
     BAD_COLOR: "#ff0000",
-    NEUTRAL_COLOR: "#ffff00",
+    NEUTRAL_COLOR: "#000000",
     SENSITIVITY: 1.0,
     SETTINGS_RESET: true,
 }
