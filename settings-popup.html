@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Grade Grubber</title>
+        <link rel="stylesheet" href="settings-popup.css">
+    </head>
+    <body>
+        <header>
+            <h1 id="gg-header-text">Grade Grubber</h1>
+        </header>
+        <main>
+            <div class="settings-entry">
+                <h2 id="sensitivityTitle">Shading Sensitivity</h2>
+                <p>Change this if you want the shading on your grades more or less intense.</p>
+                <input type="range" id="sensitivitySlider" value="1" min="0.1" max="3" step="0.1">
+                <output id="sensitivityOutput">24</output>
+              </div>
+              <div class="settings-entry">
+                <h2 id="goodColorTitle">"Good" Color</h2>
+                <p>Change this if you want the color of your "good" grades to be different.</p>
+                <input type="color" id="goodColorPicker" value="#00ff00">
+              </div>
+              <div class="settings-entry">
+                <h2 id="neutralColorTitle">"Neutral" Color</h2>
+                <p>Change this if you want the color of your "neutral" grades to be different.</p>
+                <input type="color" id="neutralColorPicker" value="#000000">
+              </div>
+              <div class="settings-entry">
+                <h2 id="badColorTitle">"Bad" Color</h2>
+                <p>Change this if you want the color of your "bad" grades to be different.</p>
+                <input type="color" id="badColorPicker" value="#ff0000">
+              </div>
+        </main>
+        <footer>
+            <div id="gg-footer-buttons">
+                <div id="gg-footer-button">
+                    <button id="reset-settings-button" class="button-2" type="button">Reset Settings</button>
+                </div>
+                <div id="gg-footer-button">
+                    <p>Enable Extension</p>
+                    <label class="switch">
+                        <input id="enable-switch" type="checkbox" checked>
+                        <span class="slider"></span>
+                      </label>
+                </div>
+            </div>
+            <div id="gg-footer-text">
+                Made by <b>Malik Endsley</b> (<a href="https://github.com/malikendsley" target="_blank">GitHub</a>)
+            </div>
+        </footer>
+    </body>
+    <script src="settings-popup.js"></script>
+</html>
