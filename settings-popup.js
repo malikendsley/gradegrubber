@@ -14,6 +14,7 @@ const sensitivityOutput = document.getElementById('sensitivityOutput');
 const goodColorPicker = document.getElementById('goodColorPicker');
 const neutralColorPicker = document.getElementById('neutralColorPicker');
 const badColorPicker = document.getElementById('badColorPicker');
+const enableSwitch = document.getElementById('enable-switch');
 
 // Load settings from storage
 chrome.storage.sync.get(null, function (settings) {
@@ -27,6 +28,7 @@ chrome.storage.sync.get(null, function (settings) {
     goodColorPicker.value = GC;
     neutralColorPicker.value = NC;
     badColorPicker.value = BC;
+    enableSwitch.checked = settings.EXTENSION_ENABLED;
 });
 
 

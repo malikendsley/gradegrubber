@@ -4,8 +4,6 @@
 // UTILITY FUNCTIONS (Same scope to avoid using the messaging API for them)
 //==================================================================================================
 String.prototype.convertToRGB = function () {
-    //strip the leading # if it's there
-    console.log(this);
     if (this.length != 6) {
         throw "Only six-digit hex colors are allowed.";
     }
@@ -24,49 +22,43 @@ function componentToHex(c) {
     return hex.length == 1 ? "0" + hex : hex;
   }
 
-function getBlendedColor(relPerf, BC, GC, NC, sens) {
+function getBlendedColor(relPerf, badColor, goodColor, neutralColor, sens) {
     //strip the leading # if it's there
-    BC = BC.replace('#', '');
-    GC = GC.replace('#', '');
-    NC = NC.replace('#', '');
-    BCrgb = BC.convertToRGB(); // however these are lists, not objects
-    GCrgb = GC.convertToRGB();
-    NCrgb = NC.convertToRGB();
+    badColor = badColor.replace('#', '');
+    goodColor = goodColor.replace('#', '');
+    neutralColor = neutralColor.replace('#', '');
+    BCrgb = badColor.convertToRGB(); // however these are lists, not objects
+    GCrgb = goodColor.convertToRGB();
+    NCrgb = neutralColor.convertToRGB();
 
     // convert to objects
-    BC = { r: BCrgb[0], g: BCrgb[1], b: BCrgb[2] };
-    GC = { r: GCrgb[0], g: GCrgb[1], b: GCrgb[2] };
-    NC = { r: NCrgb[0], g: NCrgb[1], b: NCrgb[2] };
+    badColor = { r: BCrgb[0], g: BCrgb[1], b: BCrgb[2] };
+    goodColor = { r: GCrgb[0], g: GCrgb[1], b: GCrgb[2] };
+    neutralColor = { r: NCrgb[0], g: NCrgb[1], b: NCrgb[2] };
 
-    let blendedColor;
+    let interpolatedComponents;
     if (relPerf < 0) {
         // Interpolate between badColor and white
-        blendedColor = {
-            r: Math.round((1 + relPerf * sens) * NC.r + (-relPerf * sens) * BC.r),
-            g: Math.round((1 + relPerf * sens) * NC.g + (-relPerf * sens) * BC.g),
-            b: Math.round((1 + relPerf * sens) * NC.b + (-relPerf * sens) * BC.b),
+        interpolatedComponents = {
+            r: Math.round((1 + relPerf * sens) * neutralColor.r + (-relPerf * sens) * badColor.r),
+            g: Math.round((1 + relPerf * sens) * neutralColor.g + (-relPerf * sens) * badColor.g),
+            b: Math.round((1 + relPerf * sens) * neutralColor.b + (-relPerf * sens) * badColor.b),
         };
     } else {
         // Interpolate between white and goodColor
-        blendedColor = {
-            r: Math.round((1 - relPerf * sens) * NC.r + relPerf * sens * GC.r),
-            g: Math.round((1 - relPerf * sens) * NC.g + relPerf * sens * GC.g),
-            b: Math.round((1 - relPerf * sens) * NC.b + relPerf * sens * GC.b),
+        interpolatedComponents = {
+            r: Math.round((1 - relPerf * sens) * neutralColor.r + relPerf * sens * goodColor.r),
+            g: Math.round((1 - relPerf * sens) * neutralColor.g + relPerf * sens * goodColor.g),
+            b: Math.round((1 - relPerf * sens) * neutralColor.b + relPerf * sens * goodColor.b),
         };
     }
 
     //convert the color to a 6 digit hex string
-    let color = "#" + componentToHex(blendedColor.r) + componentToHex(blendedColor.g) + componentToHex(blendedColor.b);
+    let color = "#" + componentToHex(interpolatedComponents.r) + componentToHex(interpolatedComponents.g) + componentToHex(interpolatedComponents.b);
     return color;
 }
 
 function getRelativePerformance(userGrade, maxGrade, averageGrade) {
-
-    //get the performance relative to the average, as a number between -1 and 1
-    // -1 is the worst, 0 is average, 1 is the best
-    // the worst score is achieved when the user has 0 and the average is maxGrade
-    // the best score is achieved when the user has maxGrade and the average is 0
-    // this is extracted to a function in case we want to change the formula later
     console.log("userGrade: " + userGrade + " maxGrade: " + maxGrade + " averageGrade: " + averageGrade)
     return (userGrade - averageGrade) / maxGrade;
 }
