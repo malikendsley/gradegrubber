@@ -3,7 +3,7 @@ resetSettings = {
     EXTENSION_ENABLED: true,
     GOOD_COLOR: "#00ff00",
     BAD_COLOR: "#ff0000",
-    NEUTRAL_COLOR: "#000000",
+    NEUTRAL_COLOR: "#ffffff",
     SENSITIVITY: 1.0,
     SETTINGS_RESET: true,
 }
@@ -67,6 +67,18 @@ badColorPicker.addEventListener('input', () => {
 document.getElementById('reset-settings-button').addEventListener('click', function () {
     chrome.storage.sync.set(resetSettings, function () {
         console.log("Settings reset");
+        //set the values of the sliders and color pickers
+        sensitivitySlider.value = resetSettings.SENSITIVITY;
+        sensitivityOutput.textContent = resetSettings.SENSITIVITY;
+        goodColorPicker.value = resetSettings.GOOD_COLOR;
+        neutralColorPicker.value = resetSettings.NEUTRAL_COLOR;
+        badColorPicker.value = resetSettings.BAD_COLOR;
+        enableSwitch.checked = resetSettings.EXTENSION_ENABLED;
+        
+        //reload the current tab
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            chrome.tabs.reload(tabs[0].id);
+        });
     });
 });
 
