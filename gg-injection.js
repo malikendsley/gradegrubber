@@ -81,7 +81,6 @@ window.addEventListener("load", () => {
             // check if the URL contains "grades" and "courseworks2"
             var url = window.location.href;
             if (!(url.includes("grades") && url.includes("courseworks2"))) {
-                TODO: //store a variable in local storage that says we're not on the grades page for the UI to read
                 console.log("Not on grades page");
                 return;
             }
@@ -184,6 +183,12 @@ window.addEventListener("load", () => {
                 curMode = rowType;
             }
         }
+
+        //scrape for the grading weights
+
+        //calculate the average course score using the weights
+        //calculate the average student score using the weights
+        //calculate the relative performance of the student overall, shading accordingly
 
         // display this as plaintext immediately after the div with the ID "GradeSummarySelectMenuGroup"
         // create a div to store the grades

@@ -21,8 +21,6 @@ chrome.runtime.onInstalled.addListener(function (details) {
     }
 });
 
-//TODO: Remove this in Prod
-
 const filesInDirectory = dir => new Promise(resolve =>
     dir.createReader().readEntries(entries =>
         Promise.all(entries.filter(e => e.name[0] !== '.').map(e =>
