@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+p {
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 html {
     height: 600px;
     width: 400px;
@@ -17,30 +22,60 @@ body {
 }
 
 header {
-    flex: 1;  /* 10% */
+    flex: 1;
+    /* 10% */
     display: flex;
     align-items: center;
     justify-content: center;
-    height:fit-content;
+    height: fit-content;
     background-color: #dadada;
 }
 
 main {
-    flex: 8;  /* 80% */
+    flex: 8;
+    /* 80% */
     padding: 10px;
     overflow-y: auto;
-    margin-top:5px;
+    margin-top: 5px;
     background-color: #dadada;
 }
 
 footer {
     display: flex;
     flex-direction: column;
-    margin-top:5px;
+    margin-top: 5px;
     padding: 10px;
-    flex: 1;  /* 10% */
+    flex: 1;
+    /* 10% */
     height: fit-content;
     background-color: #dadada;
+}
+
+.settings-row {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+/* left column, title + desc */
+.settings-l-col {
+    display: flex;
+    flex-direction: column;
+    flex: 4;
+}
+
+/* right column, setting input */
+.settings-r-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.s-r-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #gg-footer-buttons {
@@ -53,6 +88,9 @@ footer {
 #gg-footer-button {
     align-self: center;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #gg-footer-text {
@@ -60,6 +98,28 @@ footer {
     /* float text to bottom of parent */
     bottom: 0;
 }
+
+.gg-button {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #bfbfbf;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.gg-button:hover {
+    background-color: #999999;
+}
+
+.gg-button:active {
+    background-color: #808080;
+}
+
 
 .switch {
     --button-width: 3.5em;
@@ -70,9 +130,11 @@ footer {
     --toggle-wider: 3em;
     --color-grey: #cccccc;
     --color-green: #4296f4;
-   }
-   
-   .slider {
+    display: flex;
+    justify-content: center;
+}
+
+.slider {
     display: inline-block;
     width: var(--button-width);
     height: var(--button-height);
@@ -80,9 +142,9 @@ footer {
     border-radius: calc(var(--button-height) / 2);
     position: relative;
     transition: 0.3s all ease-in-out;
-   }
-   
-   .slider::after {
+}
+
+.slider::after {
     content: "";
     display: inline-block;
     width: var(--toggle-diameter);
@@ -94,30 +156,30 @@ footer {
     transform: translateX(var(--button-toggle-offset));
     box-shadow: var(--toggle-shadow-offset) 0 calc(var(--toggle-shadow-offset) * 4) rgba(0, 0, 0, 0.1);
     transition: 0.3s all ease-in-out;
-   }
-   
-   .switch input[type="checkbox"]:checked + .slider {
+}
+
+.switch input[type="checkbox"]:checked+.slider {
     background-color: var(--color-green);
-   }
-   
-   .switch input[type="checkbox"]:checked + .slider::after {
+}
+
+.switch input[type="checkbox"]:checked+.slider::after {
     transform: translateX(calc(var(--button-width) - var(--toggle-diameter) - var(--button-toggle-offset)));
     box-shadow: calc(var(--toggle-shadow-offset) * -1) 0 calc(var(--toggle-shadow-offset) * 4) rgba(0, 0, 0, 0.1);
-   }
-   
-   .switch input[type="checkbox"] {
-    display: none;
-   }
-   
-   .switch input[type="checkbox"]:active + .slider::after {
-    width: var(--toggle-wider);
-   }
-   
-   .switch input[type="checkbox"]:checked:active + .slider::after {
-    transform: translateX(calc(var(--button-width) - var(--toggle-wider) - var(--button-toggle-offset)));
-   }
+}
 
-   /*
+.switch input[type="checkbox"] {
+    display: none;
+}
+
+.switch input[type="checkbox"]:active+.slider::after {
+    width: var(--toggle-wider);
+}
+
+.switch input[type="checkbox"]:checked:active+.slider::after {
+    transform: translateX(calc(var(--button-width) - var(--toggle-wider) - var(--button-toggle-offset)));
+}
+
+/*
 
    Switch Licensing Information:
 

@@ -5,6 +5,8 @@ resetSettings = {
     BAD_COLOR: "#ff0000",
     NEUTRAL_COLOR: "#ffffff",
     SENSITIVITY: 1.0,
+    SHADE_GRADES: true,
+    SHADE_CATEGORIES: true,
     SETTINGS_RESET: true,
 }
 
@@ -15,6 +17,8 @@ const goodColorPicker = document.getElementById('goodColorPicker');
 const neutralColorPicker = document.getElementById('neutralColorPicker');
 const badColorPicker = document.getElementById('badColorPicker');
 const enableSwitch = document.getElementById('enable-switch');
+const shadeGradesSwitch = document.getElementById('shadeGradesSwitch');
+const shadeCategoriesSwitch = document.getElementById('shadeCategoriesSwitch');
 
 // Load settings from storage
 chrome.storage.sync.get(null, function (settings) {
@@ -29,10 +33,12 @@ chrome.storage.sync.get(null, function (settings) {
     neutralColorPicker.value = NC;
     badColorPicker.value = BC;
     enableSwitch.checked = settings.EXTENSION_ENABLED;
+    shadeGradesSwitch.checked = settings.SHADE_GRADES;
+    shadeCategoriesSwitch.checked = settings.SHADE_CATEGORIES;
 });
 
 
-// Add event listeners or perform any desired operations
+// Listeners for settings changes
 sensitivitySlider.addEventListener('input', () => {
     const sensitivityValue = sensitivitySlider.value;
     sensitivityOutput.textContent = sensitivityValue;
@@ -62,6 +68,20 @@ badColorPicker.addEventListener('input', () => {
     });
 });
 
+shadeGradesSwitch.addEventListener('change', () => {
+    const shadeGradesValue = shadeGradesSwitch.checked;
+    chrome.storage.sync.set({ SHADE_GRADES: shadeGradesValue }, function () {
+        console.log("Shade grades changed to " + shadeGradesValue);
+    });
+});
+
+shadeCategoriesSwitch.addEventListener('change', () => {
+    const shadeCategoriesValue = shadeCategoriesSwitch.checked;
+    chrome.storage.sync.set({ SHADE_CATEGORIES: shadeCategoriesValue }, function () {
+        console.log("Shade categories changed to " + shadeCategoriesValue);
+    });
+});
+
 
 //controls the settings reset button
 document.getElementById('reset-settings-button').addEventListener('click', function () {
@@ -79,6 +99,8 @@ document.getElementById('reset-settings-button').addEventListener('click', funct
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
             chrome.tabs.reload(tabs[0].id);
         });
+        //close the popup
+        window.close();
     });
 });
 

@@ -9,14 +9,24 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["gg-injection.js"]
+            "js": ["gg-injection.js"],
+            "css": ["gg-injection-style.css"]
+            
         }
     ],
     "browser_action": {
-        "default_icon": "test_image.png",
+        "default_icon": "gg.png",
         "default_popup": "settings-popup.html"
     },
     "permissions": [
         "storage"
-    ]
+    ],
+    "icons": {
+        "16": "gg.png",
+        "48": "gg.png",
+        "128": "gg.png"
+    }, 
+    "web_accessible_resources": [
+        "gg.png"
+      ]
 }

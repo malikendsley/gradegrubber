@@ -4,6 +4,8 @@ settings = {
     BAD_COLOR: "#ff0000",
     NEUTRAL_COLOR: "#ffffff",
     SENSITIVITY: 1.0,
+    SHADE_GRADES: true,
+    SHADE_CATEGORIES: true,
     SETTINGS_RESET: false,
 }
 
