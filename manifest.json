@@ -29,6 +29,5 @@
             "matches": ["<all_urls>"],
             "js": ["gg-injection.js"]
         }
-    ],
-    "css": ["gg-injection-style.css"]
+    ]
 }

@@ -111,7 +111,9 @@ window.addEventListener("load", () => {
             // create a div to store the grades
             let div = document.createElement("div");
             div.id = "gg-container";
-
+            let style = document.createElement("style");
+            style.textContent = css;
+            document.head.appendChild(style);
             // Inject the HTML code
             div.innerHTML = `
         <div class="gg-top">
@@ -446,3 +448,73 @@ function getCallToAction(studentGrade, courseGrade) {
         return neutralStatements[neutralStatements.length * Math.random() | 0];
     }
 }
+
+// Manifest V3 makes this a hassle (and ugly)
+
+let css = `
+#gg-container {
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    margin: 10px;
+    padding: 10px;
+}
+
+.gg-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.gg-bar {
+    width: 200px;
+}
+
+.gg-bar-title {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.gg-bar-progress {
+    background-color: #bfbfbf;
+    border-radius: 4px;
+    height: 20px;
+}
+
+.gg-bar-progress-bar {
+    height: 100%;
+    background-color: green;
+    width: 0;
+    transition: width 0.5s ease-in-out;
+}
+
+.gg-bar-value {
+    text-align: center;
+    font-size: 16px;
+    margin-top: 4px;
+    font-weight: bold;
+}
+
+.gg-top .gg-pic {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 75px;
+    height: 75px;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 2px solid #000;
+    /* Change the color and size as desired */
+    box-sizing: border-box;
+    position: relative;
+}
+
+.gg-pic img {
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 50%;
+}
+
+
+`
