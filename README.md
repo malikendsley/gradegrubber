@@ -1,6 +1,6 @@
 # Grade Grubber
 
-Grade Grubber is a Chrome extension designed to enhance your Courseworks Grades page experience. It provides an in-depth comparison of your academic performance relative to your class, and the ability to personalize the extension’s appearance through customizable colors. 
+Grade Grubber is a Chrome extension designed to enhance your Courseworks Grades page experience. It provides an in-depth comparison of your academic performance relative to your class, and the ability to personalize the extension’s appearance through customizable colors. It activates whenever you visit the "grades" section of any class.
 
 ## Features
 
