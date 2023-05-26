@@ -12,7 +12,9 @@ Grade Grubber is a Chrome extension designed to enhance your Courseworks Grades 
 
 ## Installation
 
-Grade Grubber is easy to install. For now, it can be added as an unpackaged extension directly from its GitHub directory. In the near future, it will be available for installation from the Chrome Web Store.
+Grade Grubber is easy to install. For now, it can be added as an unpackaged extension directly from its GitHub directory. In order to do this, 
+
+In the near future, it will be available for installation from the Chrome Web Store.
 
 ## Compatibility and Requirements
 
