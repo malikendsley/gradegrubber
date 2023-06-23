@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
     "name": "Grade Grubber",
-    "description": "Simple CourseWorks Analytics",
-    "version": "1.0",
+    "description": "Grade Grubber is an enhances the Courseworks Grades page with key stats, color coding, and customization! Stores no data.",
+    "version": "0.1",
     "background": {
         "service_worker": "background.js"
     },
@@ -14,8 +14,8 @@
         "storage"
     ],
     "icons": {
-        "16": "gg.png",
-        "48": "gg.png",
+        "16": "gg16.png",
+        "48": "gg48.png",
         "128": "gg.png"
     },
     "web_accessible_resources": [
@@ -26,7 +26,7 @@
     ],
     "content_scripts": [
         {
-            "matches": ["<all_urls>"],
+            "matches": ["https://courseworks2.columbia.edu/*"],
             "js": ["gg-injection.js"]
         }
     ]
