@@ -26,7 +26,7 @@
     ],
     "content_scripts": [
         {
-            "matches": ["https://courseworks2.columbia.edu/*"],
+            "matches": ["<all_urls>"],
             "js": ["gg-injection.js"]
         }
     ]

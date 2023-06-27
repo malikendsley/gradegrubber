@@ -15,7 +15,12 @@ window.addEventListener("load", () => {
     } else {
       // check if the URL contains "grades" and "courseworks2"
       let url = window.location.href;
-      if (!(url.includes("grades") && url.includes("courseworks2"))) {
+      if (
+        !(
+          url.includes("grades") &&
+          (url.includes("courseworks2") || url.includes("canvas"))
+        )
+      ) {
         //console.log("Not on grades page");
         return;
       }
